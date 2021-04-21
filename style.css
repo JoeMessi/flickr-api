@@ -112,6 +112,8 @@ background-position: center;
 .card p.titles {
     border-bottom: 1px solid #21212121;
     padding-bottom: 0.5rem;
+
+    position: relative;
 }
 
 .card p.desc {
@@ -138,6 +140,24 @@ background-position: center;
     margin-bottom: 0;
     padding-top: 0.5rem;
     border-top: 1px solid #21212121;
+}
+
+.tooltip {
+    visibility: hidden;
+    width: auto;
+    font-size: 12px;
+    background-color: #212121;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 2.4rem;
+    left: 0;
+}
+.titles a:hover .tooltip {
+    visibility: visible;
 }
 
 
