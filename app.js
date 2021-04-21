@@ -120,7 +120,7 @@ function getDocHeight() {
         <div class="card">
             <div class="img-div-box"><div class="img-div" style="background-image: url(https://live.staticflickr.com/${imgData.server}/${imgData.id}_${imgData.secret}.jpg)"></div></div>
             <div class="text">
-                <p class="titles"><a href="https://www.flickr.com/photos/${imgData.owner}/${imgData.id}">${titles.title[0]}${tooltipTitle}</a> by <a href="https://www.flickr.com/photos/${imgData.owner}">${titles.author[0]}${tooltipAuthor}</a></p>
+                <p class="titles"><a href="https://www.flickr.com/photos/${imgData.owner}/${imgData.id}">${titles.title}${tooltipTitle}</a> by <a href="https://www.flickr.com/photos/${imgData.owner}">${titles.author}${tooltipAuthor}</a></p>
                 <p class="desc">${desc}</p>
                 <p class="ellipsis">${tags}</p>
             </div>
@@ -130,30 +130,30 @@ function getDocHeight() {
 
 
 
+
  function titlesHandler(title, author) {
 
     let hash = {
-        title: [title, title.length],
-        author: [author, author.length],
+        title: title,
+        author: author,
         shortened: null
     }
 
-    let total = hash.title[1] + hash.author[1];
+    let total = hash.title.length + hash.author.length;
 
     if(total > 34) {
-        let longest = Math.max(hash.title[1], hash.author[1]);
-        let otherOne = Math.min(hash.title[1], hash.author[1]);
+        let bigger = Math.max(hash.title.length, hash.author.length);
+        let smaller = Math.min(hash.title.length, hash.author.length);
         
-        let toShorten = getKeyByValue(hash, longest);
+        let propToShorten = getKeyFromLength(hash, bigger);
 
-        hash.shortened = toShorten;
+        hash.shortened = propToShorten;
     
         while(total > 34) {
-            let temp = removeLastWord(hash[toShorten][0]) + '...';
-            hash[toShorten][0] = temp;
-            total = temp.length +  otherOne;
+            let temp = removeLastWord(hash[propToShorten]) + '...';
+            hash[propToShorten] = temp;
+            total = temp.length +  smaller;
         }
-
     }
 
    return hash;
@@ -164,11 +164,49 @@ function getDocHeight() {
         return arr.join(' ');
     }
 
-    function getKeyByValue(object, value) {
-        return Object.keys(object).find(key => object[key][1] === value);
+    function getKeyFromLength(object, valueLength) {
+        return Object.keys(object).find(key => object[key].length === valueLength);
     }
-
  }
+//  function titlesHandler(title, author) {
+
+//     let hash = {
+//         title: [title, title.length],
+//         author: [author, author.length],
+//         shortened: null
+//     }
+
+//     let total = hash.title[1] + hash.author[1];
+
+//     if(total > 34) {
+//         let longest = Math.max(hash.title[1], hash.author[1]);
+//         let otherOne = Math.min(hash.title[1], hash.author[1]);
+        
+//         let toShorten = getKeyByValue(hash, longest);
+
+//         hash.shortened = toShorten;
+    
+//         while(total > 34) {
+//             let temp = removeLastWord(hash[toShorten][0]) + '...';
+//             hash[toShorten][0] = temp;
+//             total = temp.length +  otherOne;
+//         }
+
+//     }
+
+//    return hash;
+
+//     function removeLastWord(string) {
+//         let arr = string.split(' ');
+//         arr.pop();
+//         return arr.join(' ');
+//     }
+
+//     function getKeyByValue(object, value) {
+//         return Object.keys(object).find(key => object[key][1] === value);
+//     }
+
+//  }
 
 
 

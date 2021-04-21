@@ -1,32 +1,33 @@
 
 
-
+// good one 
 
  function titlesHandler(title, author) {
 
     let hash = {
-        title: [title, title.length],
-        author: [author, author.length]
+        title: title,
+        author: author,
+        shortened: null
     }
 
-    let total = hash.title[1] + hash.author[1];
+    let total = hash.title.length + hash.author.length;
 
-    let longest = Math.max(hash.title[1], hash.author[1]);
-    let otherOne = Math.min(hash.title[1], hash.author[1]);
+    if(total > 34) {
+        let bigger = Math.max(hash.title.length, hash.author.length);
+        let smaller = Math.min(hash.title.length, hash.author.length);
+        
+        let propToShorten = getKeyFromLength(hash, bigger);
+
+        hash.shortened = propToShorten;
     
-    let toShorten = getKeyByValue(hash, longest);
-
-
-    while(total > 36) {
-        let temp = removeLastWord(hash[toShorten][0])
-        hash[toShorten][0] = temp;
-        total = temp.length +  otherOne;
+        while(total > 34) {
+            let temp = removeLastWord(hash[propToShorten]) + '...';
+            hash[propToShorten] = temp;
+            total = temp.length +  smaller;
+        }
     }
 
-
-   console.log(hash[toShorten][0])
-
- console.log(hash[toShorten][0].length + otherOne )
+   return hash;
 
     function removeLastWord(string) {
         let arr = string.split(' ');
@@ -34,9 +35,7 @@
         return arr.join(' ');
     }
 
-    function getKeyByValue(object, value) {
-        return Object.keys(object).find(key => object[key][1] === value);
+    function getKeyFromLength(object, valueLength) {
+        return Object.keys(object).find(key => object[key].length === valueLength);
     }
-
-
  }
