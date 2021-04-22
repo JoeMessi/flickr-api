@@ -18,6 +18,9 @@ a {
 a:hover {
     color: #d64721;
 }
+input:required {
+  box-shadow: none;
+}
 #header {
     text-align: center;
 }
