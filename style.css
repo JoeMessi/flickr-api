@@ -18,11 +18,9 @@ a {
 a:hover {
     color: #d64721;
 }
-
 #header {
     text-align: center;
 }
-
 #main-box {
     background: white;
     width: 78%;
@@ -32,7 +30,6 @@ a:hover {
     padding: 4rem 0rem;
     margin-top: 4rem;
 }
-
 
 /**** Search form ****/
 
@@ -66,7 +63,7 @@ a:hover {
     cursor: pointer;
 }
 
-
+/**** Gallery ****/
 
 #image-gall-box {
     display: flex;
@@ -78,7 +75,6 @@ a:hover {
     flex-wrap: wrap;
     justify-content: center;
 }
-
 .card {
     background: white;
     box-shadow: 0 8px 32px 0 rgb(158 158 165 / 37%);
@@ -89,13 +85,11 @@ a:hover {
     font-size: 0.9rem;
     text-align: justify;
 }
-
 .card .img-div-box {
     width: 100%;
     height: 14rem;
     overflow: hidden;
 }
-
 .card .img-div {
 width: 100%;
 height: 15rem;
@@ -103,48 +97,35 @@ background-repeat: no-repeat;
 background-size: cover;
 background-position: center;
 }
-
 .card .text {
     word-break: break-all;
     position: relative;
 }
-
 .card p.titles {
     border-bottom: 1px solid #21212121;
     padding-bottom: 0.5rem;
-
     position: relative;
 }
-
 .card p.desc {
     height: 6rem;
+    margin-bottom: 1.4rem;
 }
 .card p.desc::after {
     content: 'Tags:';
     position: absolute;
     left: 0;
-    bottom: 2.4rem;
+    bottom: 2.1rem;
     font-size: 0.8rem;
     font-weight: 300;
 }
-
-.ellipsis {
-    display: inline-block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    width: 100%;
-    text-align: justify;
-    margin-bottom: 0;
+.tags {
     font-weight: 200;
     margin-bottom: 0;
     padding-top: 0.5rem;
     border-top: 1px solid #21212121;
 }
-
 .tooltip {
     visibility: hidden;
-    width: auto;
     font-size: 12px;
     background-color: #212121;
     color: #fff;
@@ -152,14 +133,13 @@ background-position: center;
     border-radius: 6px;
     padding: 5px;
     position: absolute;
-    z-index: 1;
     bottom: 2.4rem;
     left: 0;
+    right: 0;
 }
 .titles a:hover .tooltip {
     visibility: visible;
 }
-
 
 /**** Messages ****/
 
@@ -180,8 +160,6 @@ background-position: center;
     font-size: 1.3rem;
     font-weight: 600;
 }
-
-
 
 /**** Loading spinner ****/
 
