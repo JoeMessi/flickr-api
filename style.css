@@ -85,7 +85,6 @@ input:required {
 #image-gall-box {
     display: flex;
     flex-direction: column;
-    align-items: center;
 }
 .image-gallery {
     display: flex;
@@ -94,6 +93,7 @@ input:required {
 }
 .card {
     background: white;
+    box-shadow: 0 8px 32px 0 #9e9ea5;
     box-shadow: 0 8px 32px 0 rgb(158 158 165 / 37%);
     border-radius: 10px;
     padding: 2rem;
@@ -194,6 +194,7 @@ transition: transform 1.25s;
     position: relative;
     width: 80px;
     height: 80px;
+    margin: 0 auto;
 }
 .lds-spinner div {
     transform-origin: 40px 40px;
