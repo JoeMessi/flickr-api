@@ -103,7 +103,6 @@ function fetchImages(params) {
         }
         // we hide loading spinner after fetch completed
         spinner.classList.add('hidden');
-        console.log('fetching...')
     })
     .catch(err => {
         console.log('Error fetching and parsing the data', err);
