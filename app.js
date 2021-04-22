@@ -1,4 +1,3 @@
-
 // obj that will be passed to the fetch function
 const fetchParameters = {
     url: "https://www.flickr.com/services/rest/",
@@ -104,6 +103,7 @@ function fetchImages(params) {
         }
         // we hide loading spinner after fetch completed
         spinner.classList.add('hidden');
+        console.log('fetching...')
     })
     .catch(err => {
         console.log('Error fetching and parsing the data', err);
