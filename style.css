@@ -23,7 +23,7 @@ a:hover {
 }
 #main-box {
     background: white;
-    width: 78%;
+    width: 87%;
     margin: 0 auto;
     border-radius: 10px;
     box-shadow: 0 8px 32px 0 rgb(158 158 165 / 37%);
@@ -36,11 +36,12 @@ a:hover {
 .search-form-box {
     display: flex;
     justify-content: center;
-    margin-bottom: 4rem;
+    margin-bottom: 5rem;
 }
 #search-form {
     display: flex;
     width: 34rem;
+    position: relative;
 }
 #search-form input {
     height: 3rem;
@@ -62,6 +63,19 @@ a:hover {
     border-bottom-right-radius: 7px;
     cursor: pointer;
 }
+.tooltip-search {
+    visibility: hidden;
+    background-color: #212121;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    left: 0;
+    top: 3.5rem;
+    right: 0;
+    word-break: break-all;
+}
 
 /**** Gallery ****/
 
@@ -80,8 +94,8 @@ a:hover {
     box-shadow: 0 8px 32px 0 rgb(158 158 165 / 37%);
     border-radius: 10px;
     padding: 2rem;
-    width: 18rem;
-    margin: 2rem;
+    width: 17rem;
+    margin: 1rem;
     font-size: 0.9rem;
     text-align: justify;
 }
@@ -96,6 +110,11 @@ height: 15rem;
 background-repeat: no-repeat;
 background-size: cover;
 background-position: center;
+-webkit-transition: transform 1.25s;
+transition: transform 1.25s;
+}
+.card .img-div:hover {
+  transform: scale(1.2);
 }
 .card .text {
     word-break: break-all;
@@ -244,4 +263,38 @@ background-position: center;
       opacity: 0;
     }
   }
+
+
+  @media (max-width: 780px) {
+    #search-form {
+      width: 75%;
+    }
+  }
+
+  @media (max-width: 670px) {
+    #search-form input {
+      width: 85%;
+    }
+    #search-form button {
+      width: 15%;
+    }
+  }
+
+  @media (max-width: 435px) {
+    #main-box {
+      width: 100%;
+    }
+    #search-form {
+      width: 85%;
+    }
+  }
+
+  @media (max-width: 320px) {
+    .card {
+      width: 15rem;
+    }
+  }
+
+
+
   

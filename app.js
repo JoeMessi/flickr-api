@@ -6,7 +6,7 @@ const fetchParameters = {
     media: "photos",
     text: '',
     page: 1,
-    per_page: 3,
+    per_page: 4,
     extras: 'description, tags, owner_name',
     sort: 'interestingness-desc',
     safe_search: 1,
@@ -17,21 +17,37 @@ const form = document.querySelector('#search-form');
 const imgGallery = document.querySelector('.image-gallery');
 const spinner = document.querySelector('.lds-spinner');
 const messages = document.querySelector('.messages');
+const tooltipSearch = document.querySelector('.tooltip-search');
 
+
+// when search is submitted
 form.onsubmit = (e) => {
     e.preventDefault();
-    let data = new FormData(form);
-    let search = data.get('search');
+    // get the searched string by the user
+    const data = new FormData(form);
+    const search = data.get('search');
 
+    // update/reset parameters of fetch obj
     fetchParameters.page = 1;
     fetchParameters.text = search;
 
     // clear page
-    document.querySelector('.image-gallery').innerHTML = "";
+    imgGallery.innerHTML = "";
     form.querySelector('#search').value = "";
+
+    tooltipSearched(search, tooltipSearch);
+
     // fetch images
     fetchImages(fetchParameters);
+    // will handle new fetch on scroll
     window.addEventListener('scroll', scrollHandler);
+}
+
+// handles tooltip under search form
+function tooltipSearched(search, tooltip) {
+    tooltip.textContent = search;
+    tooltip.style.visibility = 'visible';
+    (search.length > 67) ? tooltip.style.fontSize = '0.7rem' : tooltip.style.fontSize = '';
 }
 
 // fetch more images on scroll
@@ -41,7 +57,8 @@ function scrollHandler() {
         fetchImages(fetchParameters)
     }  
 }
-// helper func for cross browser compatibility  
+
+// helper func for cross browser compatibility, gets document height 
 function getDocHeight() {
     var D = document;
     return Math.max(
@@ -51,18 +68,22 @@ function getDocHeight() {
     );
 }
 
-
+// checks the status of the fetch response
 function checkStatus(response) {
     if(!response.ok) throw new Error(response.statusText);
     return response.json();
 }
 
+// returns true if passed array is empty
 function checkIfEmpty(arr) {
     return arr.length == 0 ? true : false;    
 }
 
+// handles the fetch from the API
 function fetchImages(params) {
+    // shows loading spinner on page
     spinner.classList.remove('hidden');
+    // reset the div.messages class
     messages.className = 'messages';
 
     fetch(`${params.url}?method=${params.method}&api_key=${params.API_KEY}&text=${params.text}&safe_search=${params.safe_search}&media=${params.media}&per_page=${params.per_page}&page=${params.page}&extras=${params.extras}&sort=${params.sort}&format=${params.format}&nojsoncallback=1`)
@@ -70,19 +91,24 @@ function fetchImages(params) {
     .then(data => {
         let photosArr = data.photos.photo;
         if(checkIfEmpty(photosArr)) {
-            if(imgGallery.children.length == 0) messages.classList.add('no-search') // append something and scroll off until new search?
-            else messages.classList.add('no-more-search') // append something and scroll off until new search?
+            // very first search and no matched results
+            if(imgGallery.children.length == 0) messages.classList.add('no-search')
+            // else means searched happened already, but there aren't any more matches
+            else messages.classList.add('no-more-search') 
+            // no need for calling fetch on scroll anymore at this point
             window.removeEventListener('scroll', scrollHandler);
         }else{
-            data.photos.photo.forEach(img => appendCard(img))
+            // all good, ready to inject on page
+            data.photos.photo.forEach(imgData => appendCard(imgData))
         }
+        // we hide loading spinner after fetch completed
         spinner.classList.add('hidden');
-})
-.catch(err => {
-    console.log('Error fetching and parsing the data', err);
-    spinner.classList.add('hidden');
-    messages.classList.add('nothing-found')
-});
+    })
+    .catch(err => {
+        console.log('Error fetching and parsing the data', err);
+        spinner.classList.add('hidden');
+        messages.classList.add('nothing-found');
+    });
 }
 
 
@@ -104,7 +130,9 @@ function fetchImages(params) {
      
      return `
         <div class="card">
-            <div class="img-div-box"><div class="img-div" style="background-image: url(https://live.staticflickr.com/${imgData.server}/${imgData.id}_${imgData.secret}.jpg)"></div></div>
+            <div class="img-div-box">
+                <div class="img-div" style="background-image: url(https://live.staticflickr.com/${imgData.server}/${imgData.id}_${imgData.secret}.jpg)"></div>
+            </div>
             <div class="text">
                 <p class="titles"><a href="https://www.flickr.com/photos/${imgData.owner}/${imgData.id}">${titles.title}${tooltipTitle}</a> by <a href="https://www.flickr.com/photos/${imgData.owner}">${titles.author}${tooltipAuthor}</a></p>
                 <p class="desc">${desc}</p>
@@ -127,13 +155,13 @@ function fetchImages(params) {
 
     let total = hash.title.length + hash.author.length;
 
-    if(total > 34) {
+    if(total > 32) {
         let bigger = Math.max(hash.title.length, hash.author.length);
         let smaller = Math.min(hash.title.length, hash.author.length);
         
         let propToShorten = getKeyFromLength(hash, bigger);
     
-        while(total > 34) {
+        while(total > 32) {
             let temp = removeLastWord(hash[propToShorten]) + '...';
             hash[propToShorten] = temp;
             total = temp.length +  smaller;
@@ -161,7 +189,7 @@ function fetchImages(params) {
  }
 
  function tagsHandler(text) {
-    return text.length > 0 ? truncateText(text.split(' ').join(', '), 42).replace(/,...\s*$/, "...") : "No tags available!";
+    return text.length > 0 ? truncateText(text.split(' ').join(', '), 37).replace(/,...\s*$/, "...") : "No tags available!";
  }
 
  function truncateText(text, length) {
