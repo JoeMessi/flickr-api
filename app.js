@@ -1,4 +1,5 @@
 
+// obj that will be passed to the fetch function
 const fetchParameters = {
     url: "https://www.flickr.com/services/rest/",
     API_KEY: "ef0ad418507f58471b0f73736cb3ff20",
@@ -11,7 +12,7 @@ const fetchParameters = {
     sort: 'interestingness-desc',
     safe_search: 1,
     format: "json"
- }
+}
 
 const form = document.querySelector('#search-form');
 const imgGallery = document.querySelector('.image-gallery');
@@ -60,7 +61,7 @@ function scrollHandler() {
 
 // helper func for cross browser compatibility, gets document height 
 function getDocHeight() {
-    var D = document;
+    const D = document;
     return Math.max(
         D.body.scrollHeight, D.documentElement.scrollHeight,
         D.body.offsetHeight, D.documentElement.offsetHeight,
@@ -111,42 +112,41 @@ function fetchImages(params) {
     });
 }
 
-
-
- function appendCard(imgData) {
+// injects the newly created card
+function appendCard(imgData) {
     imgGallery.innerHTML += createCard(imgData);
- }
- 
- function createCard(imgData) {
-     
-     let desc = descHandler(imgData.description._content);
-     let tags = tagsHandler(imgData.tags);
-     let titles = titlesHandler(imgData.title, imgData.ownername);
+}
 
-    //  console.log(titles)
+// creates the image card
+function createCard(imgData) {
+    
+    // some work on 'description', 'tags' and 'image title' + 'author name' before creating the card 
+    const desc = descHandler(imgData.description._content);
+    const tags = tagsHandler(imgData.tags);
+    const titles = titlesHandler(imgData.title, imgData.ownername);
 
-     let tooltipTitle = titles.shortened === 'title' ? `<span class='tooltip'>${imgData.title}</span>` : '';
-     let tooltipAuthor = titles.shortened === 'author' ? `<span class='tooltip'>${imgData.ownername}</span>` : '';
-     
-     return `
-        <div class="card">
-            <div class="img-div-box">
-                <div class="img-div" style="background-image: url(https://live.staticflickr.com/${imgData.server}/${imgData.id}_${imgData.secret}.jpg)"></div>
-            </div>
-            <div class="text">
-                <p class="titles"><a href="https://www.flickr.com/photos/${imgData.owner}/${imgData.id}">${titles.title}${tooltipTitle}</a> by <a href="https://www.flickr.com/photos/${imgData.owner}">${titles.author}${tooltipAuthor}</a></p>
-                <p class="desc">${desc}</p>
-                <p class="tags">${tags}</p>
-            </div>
+    // potential tooltips for either the image title or the author name for when they're too long
+    const tooltipTitle = titles.shortened === 'title' ? `<span class='tooltip'>${imgData.title}</span>` : '';
+    const tooltipAuthor = titles.shortened === 'author' ? `<span class='tooltip'>${imgData.ownername}</span>` : '';
+    
+    return `
+    <div class="card">
+        <div class="img-div-box">
+            <div class="img-div" style="background-image: url(https://live.staticflickr.com/${imgData.server}/${imgData.id}_${imgData.secret}.jpg)"></div>
         </div>
-      `;
- }
+        <div class="text">
+            <p class="titles"><a href="https://www.flickr.com/photos/${imgData.owner}/${imgData.id}">${titles.title}${tooltipTitle}</a> by <a href="https://www.flickr.com/photos/${imgData.owner}">${titles.author}${tooltipAuthor}</a></p>
+            <p class="desc">${desc}</p>
+            <p class="tags">${tags}</p>
+        </div>
+    </div>
+    `;
+}
 
-
-
-
- function titlesHandler(title, author) {
-
+// handles the length of (image title + author name) for when one of them is too long
+// it gets the total length of the 2 strings, finds the longest and it shortens it until 
+// the new total is under a specified length. It returns an object.
+function titlesHandler(title, author) {
     let hash = {
         title: title,
         author: author,
@@ -160,13 +160,12 @@ function fetchImages(params) {
         let smaller = Math.min(hash.title.length, hash.author.length);
         
         let propToShorten = getKeyFromLength(hash, bigger);
-    
+
         while(total > 32) {
             let temp = removeLastWord(hash[propToShorten]) + '...';
             hash[propToShorten] = temp;
             total = temp.length +  smaller;
         }
-
         hash.shortened = propToShorten;
     }
 
@@ -175,63 +174,31 @@ function fetchImages(params) {
     function getKeyFromLength(object, valueLength) {
         return Object.keys(object).find(key => object[key].length === valueLength);
     }
- }
+}
 
-
-
-
-
-
-
-
- function descHandler(text) {
+// handles image's description, if empty, a placeholder is returned
+// otherwise it is passed as argument to the truncateText() function
+function descHandler(text) {
     return text.length > 0 ?  truncateText(text, 136) : "No description available!";
- }
+}
 
- function tagsHandler(text) {
+// handles image's tags string, if empty, a placeholder is returned
+// otherwise it is passed as argument to the truncateText() function
+function tagsHandler(text) {
     return text.length > 0 ? truncateText(text.split(' ').join(', '), 37).replace(/,...\s*$/, "...") : "No tags available!";
- }
+}
 
- function truncateText(text, length) {
+// handles text by calling the removeLastWord() function to shorten it
+function truncateText(text, length) {
     while(text.length > length) {
         text = removeLastWord(text) + '...';
     }
     return text;
- }
+}
 
- function removeLastWord(string) {
+// removes the last word from a string
+function removeLastWord(string) {
     let arr = string.split(' ');
     arr.pop();
     return arr.join(' ');
 }
-
-
-//  function truncateText(text, wordsNum) {
-//     let words = text.split(' ');
-//     if(words.length > wordsNum) {
-//         return words.slice(0, wordsNum).join(' ') + '...';
-//     }
-//     return text;
-//  }
-//  function truncateText(text, wordsNum) {
-//     let words = text.split(' ');
-//     if(words.length > wordsNum) {
-//         return `${words.slice(0, wordsNum).join(' ')}<span class='ellipsis'>${words.slice(wordsNum).join(' ')}</span>`;
-//     }
-//     return text;
-//  }
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
