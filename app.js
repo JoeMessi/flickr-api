@@ -2,21 +2,21 @@
 var isIE = !!window.MSInputMethodContext && !!document.documentMode;
 
 if (isIE) {
-   // Create Promise polyfill script tag
+    // Create Promise polyfill script tag
     var promiseScript = document.createElement("script");
     promiseScript.type = "text/javascript";
     promiseScript.src = 'https://cdn.jsdelivr.net/npm/promise-polyfill@8.1.3/dist/polyfill.min.js';
 
-  // Create Fetch polyfill script tag
+    // Create Fetch polyfill script tag
     var fetchScript = document.createElement("script");
     fetchScript.type = "text/javascript";
     fetchScript.src = "https://cdn.jsdelivr.net/npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js";
 
-  // Add polyfills to head element
+    // Add polyfills to head element
     document.head.appendChild(promiseScript);
     document.head.appendChild(fetchScript);
 
-  // Give a second to the polyfills to load and run the function. 
+    // Give a moment to the polyfills to load and run the function. 
     setTimeout(function () {
         runTheProgram();
     }, 1000);
@@ -180,13 +180,11 @@ function runTheProgram() {
     // it gets the total length of the 2 strings, finds the longest and it shortens it until 
     // the new total is under a specified length. It returns an object.
     function titlesHandler(title, author) {
-
         let hash = {
             title: title,
             author: author,
             shortened: false
         }
-
         let total = hash.title.length + hash.author.length;
 
         if(total > 31) {
