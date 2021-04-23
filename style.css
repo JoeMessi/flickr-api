@@ -48,7 +48,6 @@ input:required {
     height: 3rem;
 }
 #search-form input {
-    height: 3rem;
     padding: 0 1rem;
     font-size: 1rem;
     width: 90%;

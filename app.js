@@ -37,14 +37,16 @@ function runTheProgram() {
         media: "photos",
         text: '',
         page: 1,
-        per_page: 6,
+        per_page: 10,
         extras: 'description,tags,owner_name',
         sort: 'interestingness-desc',
         safe_search: 1,
         format: "json"
     }
 
+    // selecting a few elements
     const form = document.querySelector('#search-form');
+    const searchInput = form.querySelector('#search');
     const imgGallery = document.querySelector('.image-gallery');
     const spinner = document.querySelector('.lds-spinner');
     const messages = document.querySelector('.messages');
@@ -54,9 +56,10 @@ function runTheProgram() {
     // when search is submitted
     form.onsubmit = function(e) {
         e.preventDefault();
-        e.returnValue = false;
+        e.returnValue = false; // (for IE)
+
         // get the searched string by the user
-        const search = form.querySelector('input').value
+        const search = searchInput.value;
 
         // update/reset parameters of fetch obj
         fetchParameters.page = 1;
@@ -64,17 +67,18 @@ function runTheProgram() {
 
         // clear page
         imgGallery.innerHTML = "";
-        form.querySelector('#search').value = "";
+        searchInput.value = "";
 
+        // handles tooltip under search form
         tooltipSearched(search, tooltipSearch);
 
-        // fetch images
+        // call fetch func with parameters obj
         fetchImages(fetchParameters);
         // will handle new fetch on scroll
         window.addEventListener('scroll', scrollHandler);
     }
 
-    // handles tooltip under search form
+    // shows the searched term by the user under the form 
     function tooltipSearched(search, tooltip) {
         tooltip.textContent = search;
         tooltip.style.visibility = 'visible';
@@ -123,15 +127,15 @@ function runTheProgram() {
             let photosArr = data.photos.photo;
             if(checkIfEmpty(photosArr)) {
                 // very first search and no matched results
-                if(imgGallery.children.length == 0) messages.classList.add('no-search')
+                if(imgGallery.children.length == 0) messages.classList.add('no-search');
                 // else means searched happened already, but there aren't any more matches
-                else messages.classList.add('no-more-search') 
+                else messages.classList.add('no-more-search');
                 // no need for calling fetch on scroll anymore at this point
                 window.removeEventListener('scroll', scrollHandler);
             }else{
                 // all good, ready to inject on page
                 data.photos.photo.forEach(function(imgData) {
-                        appendCard(imgData)
+                        appendCard(imgData);
                 })
             }
             // we hide loading spinner after fetch completed
