@@ -45,6 +45,7 @@ input:required {
     display: flex;
     width: 34rem;
     position: relative;
+    height: 3rem;
 }
 #search-form input {
     height: 3rem;
@@ -56,6 +57,7 @@ input:required {
     outline: none;
     border-top-left-radius: 7px;
     border-bottom-left-radius: 7px;
+    -webkit-appearance: none;
 }
 #search-form button {
     width: 10%;
