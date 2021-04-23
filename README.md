@@ -11,6 +11,8 @@ Some images have a very long description or tags, as well as the title and autho
 For example, the image title and author name are displayed together in 1 single line, to avoid text wrapping when that line gets too long, I get the total of the 2 strings lengths, find the longest, and shorten it until the new total fits nicely in 1 line. When that happens I add a tooltip with the full uncut string in it, which it’s shown only when you hover the truncated word, so the user can still see the full name or title.
 I do not add this feature for descriptions and tags, which sometimes can be very long texts, I thought that in a real-life scenario the user would click the links and go to the Flickr site to see the full info about the image.
 
+Also, sometimes, there isn't a description or tags, when that happens I add some placeholder text, like 'No description available'.
+
 I show some messages when there’s a problem with the search and there’s a loading spinning icon when the fetching is happening.
 
 It was a bit of a challenge to make the code compatible for IE, to be 100% honest with you, in my previous jobs they never really cared about IE so I wasn’t fully aware of all the many features that don’t work on IE, the Javascript Fetch() method is one of them, as other Array methods and arrow syntax. My solution to this problem was to detect when the user is using IE and add 2 polyfills, one for Promises and one for Fetch. The polyfills are added only when IE is detected to avoid loading the program with resources it wouldn’t need otherwise.
