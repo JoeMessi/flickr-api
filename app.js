@@ -30,7 +30,7 @@ if (isIE) {
 function runTheProgram() {
 
     // obj that will be passed to the fetch function
-    const fetchParameters = {
+    var fetchParameters = {
         url: "https://www.flickr.com/services/rest/",
         API_KEY: "ef0ad418507f58471b0f73736cb3ff20",
         method: "flickr.photos.search",
@@ -45,12 +45,12 @@ function runTheProgram() {
     }
 
     // selecting a few elements
-    const form = document.querySelector('#search-form');
-    const searchInput = form.querySelector('#search');
-    const imgGallery = document.querySelector('.image-gallery');
-    const spinner = document.querySelector('.lds-spinner');
-    const messages = document.querySelector('.messages');
-    const tooltipSearch = document.querySelector('.tooltip-search');
+    var form = document.querySelector('#search-form');
+    var searchInput = form.querySelector('#search');
+    var imgGallery = document.querySelector('.image-gallery');
+    var spinner = document.querySelector('.lds-spinner');
+    var messages = document.querySelector('.messages');
+    var tooltipSearch = document.querySelector('.tooltip-search');
 
 
     // when search is submitted
@@ -59,7 +59,7 @@ function runTheProgram() {
         e.returnValue = false; // (for IE)
 
         // get the searched string by the user
-        const search = searchInput.value;
+        var search = searchInput.value;
 
         // update/reset parameters of fetch obj
         fetchParameters.page = 1;
@@ -89,13 +89,13 @@ function runTheProgram() {
     function scrollHandler() {
         if( Math.ceil(window.pageYOffset + window.innerHeight) >= getDocHeight() ) {
             fetchParameters.page ++;
-            fetchImages(fetchParameters)
+            fetchImages(fetchParameters);
         }  
     }
 
     // helper func for cross browser compatibility, gets document height 
     function getDocHeight() {
-        const D = document;
+        var D = document;
         return Math.max(
             D.body.scrollHeight, D.documentElement.scrollHeight,
             D.body.offsetHeight, D.documentElement.offsetHeight,
@@ -124,7 +124,7 @@ function runTheProgram() {
         fetch(params.url+'?method='+params.method+'&api_key='+params.API_KEY+'&text='+params.text+'&safe_search='+params.safe_search+'&media='+params.media+'&per_page='+params.per_page+'&page='+params.page+'&extras='+params.extras+'&sort='+params.sort+'&format='+params.format+'&nojsoncallback=1')
         .then(function(res) {return checkStatus(res)})
         .then(function(data) {
-            let photosArr = data.photos.photo;
+            var photosArr = data.photos.photo;
             if(checkIfEmpty(photosArr)) {
                 // very first search and no matched results
                 if(imgGallery.children.length == 0) messages.classList.add('no-search');
@@ -156,13 +156,13 @@ function runTheProgram() {
     // creates the image card
     function createCard(imgData) {  
         // some work on 'description', 'tags' and 'image title' + 'author name' before creating the card 
-        const desc = descHandler(imgData.description._content);
-        const tags = tagsHandler(imgData.tags);
-        const titles = titlesHandler(imgData.title, imgData.ownername);
+        var desc = descHandler(imgData.description._content);
+        var tags = tagsHandler(imgData.tags);
+        var titles = titlesHandler(imgData.title, imgData.ownername);
 
         // potential tooltips for either the image title or the author name for when they're too long
-        const tooltipTitle = titles.shortened === 'title' ? "<span class='tooltip'>"+imgData.title+"</span>" : '';
-        const tooltipAuthor = titles.shortened === 'author' ? "<span class='tooltip'>"+imgData.ownername+"</span>" : '';
+        var tooltipTitle = titles.shortened === 'title' ? "<span class='tooltip'>"+imgData.title+"</span>" : '';
+        var tooltipAuthor = titles.shortened === 'author' ? "<span class='tooltip'>"+imgData.ownername+"</span>" : '';
         
         return '<div class="card">\
                     <div class="img-div-box">\
@@ -177,27 +177,24 @@ function runTheProgram() {
     }
 
     // handles the length of (image title + author name) for when one of them is too long
-    // it gets the total length of the 2 strings, finds the longest and it shortens it until 
-    // the new total is under a specified length. It returns an object.
+    // it gets the total length of the 2 strings, finds the longest and it shortens it 
+    // with the shortenString() func, It returns an object.
     function titlesHandler(title, author) {
-        let hash = {
+
+        var hash = {
             title: title,
             author: author,
             shortened: false
         }
-        let total = hash.title.length + hash.author.length;
 
-        if(total > 31) {
-            let bigger = Math.max(hash.title.length, hash.author.length);
-            let smaller = Math.min(hash.title.length, hash.author.length);
-            
-            let propToShorten = getKeyFromLength(hash, bigger);
+        var total = hash.title.length + hash.author.length;
 
-            while(total > 31) {
-                let temp = removeLastWord(hash[propToShorten]) + '...';
-                hash[propToShorten] = temp;
-                total = temp.length +  smaller;
-            }
+        if(total > 28) {
+            var bigger = Math.max(hash.title.length, hash.author.length);            
+            var propToShorten = getKeyFromLength(hash, bigger);
+            var maxChars = bigger - (total - 28);
+
+            hash[propToShorten] = shortenString(maxChars, hash[propToShorten]);
             hash.shortened = propToShorten;
         }
 
@@ -208,31 +205,47 @@ function runTheProgram() {
         }
     }
 
-    // handles image's description, if empty, a placeholder is returned
-    // otherwise it is passed as argument to the truncateText() function
+    // handles image's description, if empty, placeholder text is returned
+    // otherwise it is shortened if too long or returned as it is 
     function descHandler(text) {
-        return text.length > 0 ?  truncateText(text, 136) : "No description available!";
-    }
-
-    // handles image's tags string, if empty, a placeholder is returned
-    // otherwise it is passed as argument to the truncateText() function
-    function tagsHandler(text) {
-        return text.length > 0 ? truncateText(text.split(' ').join(', '), 37).replace(/,...\s*$/, "...") : "No tags available!";
-    }
-
-    // handles text by calling the removeLastWord() function to shorten it
-    function truncateText(text, length) {
-        while(text.length > length) {
-            text = removeLastWord(text) + '...';
+        if(text.length == 0) {
+           return "No description available!";
         }
-        return text;
+        else if(text.length < 136) {
+           return text;
+        }
+        else{
+            return shortenString(136, text);
+        }
     }
 
-    // removes the last word from a string
-    function removeLastWord(string) {
-        let arr = string.split(' ');
-        arr.pop();
-        return arr.join(' ');
+    // handles image's tags string, if empty, placeholder text is returned
+    // otherwise it is shortened if too long or returned
+    function tagsHandler(text) {
+        var withCommas = text.split(' ').join(', ');
+
+        if(text.length == 0) {
+            return "No tags available!";
+         }
+         else if(withCommas.length < 37) {
+            return withCommas;
+         }
+         else{
+             return shortenString(37, withCommas).replace(/,...\s*$/, "...");
+         }
+    }
+
+    // it shortens and returns a string given a max number of characters
+    function shortenString(maxChars, string) {
+        var newString = [];
+        var arr = string.split(' ');
+
+        for(var i = 0; i < arr.length; i++) {
+           if(newString.join(' ').length + (arr[i].length + 4) <= maxChars) {
+               newString.push(arr[i]);
+           }
+        }
+        return newString.join(' ') + '...';
     }
 
 }

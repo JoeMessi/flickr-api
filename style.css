@@ -125,6 +125,7 @@ transition: transform 1.25s;
     position: relative;
 }
 .card p.titles {
+    border-bottom: 1px solid #e2e2e2;
     border-bottom: 1px solid #21212121;
     padding-bottom: 0.5rem;
     position: relative;
@@ -145,6 +146,7 @@ transition: transform 1.25s;
     font-weight: 200;
     margin-bottom: 0;
     padding-top: 0.5rem;
+    border-top: 1px solid #e2e2e2;
     border-top: 1px solid #21212121;
 }
 .tooltip {
